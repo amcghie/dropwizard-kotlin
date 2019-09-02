@@ -1,9 +1,14 @@
 package com.amcghie
 
+import com.amcghie.feature.hello.HelloController
+import com.amcghie.views.handlebars.HandlebarsViewRenderer
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import io.dropwizard.Application
 import io.dropwizard.setup.Bootstrap
 import io.dropwizard.setup.Environment
+import io.dropwizard.views.ViewBundle
+
+
 
 class KotlinApplication : Application<KotlinApplicationConfiguration>() {
 
@@ -21,14 +26,21 @@ class KotlinApplication : Application<KotlinApplicationConfiguration>() {
         bootstrap
             .objectMapper
             .registerModule(KotlinModule())
-        // TODO: application initialization
+        bootstrap
+            .addBundle(
+                ViewBundle<KotlinApplicationConfiguration>(
+                    setOf(HandlebarsViewRenderer())
+                )
+            )
     }
 
     override fun run(
         configuration: KotlinApplicationConfiguration,
         environment: Environment
     ) {
-        // TODO: application initialization
+        environment
+            .jersey()
+            .register(HelloController())
     }
 }
 
